@@ -3,10 +3,20 @@ function player(turn, id){
     this.id = id;
 }
 
+const cells = document.querySelectorAll('.board h1');
+const playRound = game(); // Get the closure function
+
+// Attach one-time click listeners to each cell
+cells.forEach((cell, index) => {
+    cell.addEventListener("click", () => {
+        playRound(index); // Use index to determine which cell
+    });
+});
+
 function game(){
     const gameboard = {
-        board: Array(9).fill(""), // or [] if you're initializing later
-      
+        board: Array(9).fill(""),
+        /*
         get oneOne() { return this.board[0]; },
         set oneOne(value) { this.board[0] = value; },
       
@@ -33,9 +43,9 @@ function game(){
       
         get threeThree() { return this.board[8]; },
         set threeThree(value) { this.board[8] = value; }
+        */
     };
       
-
     const playerOne = new player(true, "x");
     const playerTwo = new player(false, "o");
 
@@ -65,91 +75,34 @@ function game(){
     }
     
     return function(round){
-        if (checkWinner(gameboard.board) === null){
-            if (gameboard[round] === ""){
-                if (playerOne.turn === true){
-                    gameboard[round] = playerOne.id;
-                    playerOne.turn = false;
-                    playerTwo.turn = true;
-                } else {
-                    gameboard[round] = playerTwo.id;
-                    playerTwo.turn = false;
-                    playerOne.turn = true;
-                }
-    
-                const result = checkWinner(gameboard.board);
-                if (result !== null) {
-                    console.log("Result:", result);
-                    
-                    // Reset board
-                    gameboard.board.fill("");
-                    
-                    // Reset player turns
-                    playerOne.turn = true;
-                    playerTwo.turn = false;
-                }
+        if (checkWinner(gameboard.board) === null && gameboard.board[round] === ""){
+            const currentPlayer = playerOne.turn ? playerOne : playerTwo;
+            gameboard.board[round] = currentPlayer.id;
+            cells[round].textContent = currentPlayer.id;
 
+            // Switch turns
+            playerOne.turn = !playerOne.turn;
+            playerTwo.turn = !playerTwo.turn;
+
+            const result = checkWinner(gameboard.board);
+            if (result !== null) {
+                //console.log("Result:", result);
+                setTimeout(() => {
+                    alert(result === "draw" ? "It's a draw!" : `${result.toUpperCase()} wins!`);
+                    resetGame();
+                }, 100);
             }
         }
     };
+
+    function resetGame() {
+        gameboard.board.fill("");
+        cells.forEach(cell => cell.textContent = "");
+        playerOne.turn = true;
+        playerTwo.turn = false;
+    }
     
 }
 
-const play = game();
-
-play("oneTwo");    // x
-play("oneOne");    // o
-play("twoTwo");    // x
-play("twoOne");    // o
-play("threeThree");// x
-play("threeOne");  // o -> win
-
-play("oneTwo");    // x
-play("oneOne");    // o
-play("twoTwo");    // x
-play("threeOne");  // o
-play("threeTwo");  // x -> win
-
-play("oneOne");    // x
-play("threeOne");  // o
-play("oneTwo");    // x
-play("threeTwo");  // o
-play("twoTwo");    // x
-play("threeThree");// o -> win
 
 
-play("oneOne");    // x
-play("oneTwo");    // o
-play("twoTwo");    // x
-play("threeTwo");  // o
-play("threeThree");// x -> win
-
-play("oneThree");  // x
-play("oneOne");    // o
-play("twoThree");  // x
-play("twoTwo");    // o
-play("threeOne");  // x
-play("threeThree");// o -> win
-
-play("oneOne");    // x
-play("oneTwo");    // o
-play("oneThree");  // x
-play("twoOne");    // o
-play("twoThree");  // x
-play("twoTwo");    // o
-play("threeTwo");  // x
-play("threeOne");  // o
-play("threeThree");// x -> draw
-
-play("threeOne");  // x
-play("oneOne");    // o
-play("threeTwo");  // x
-play("twoOne");    // o
-play("threeThree");// x -> win
-
-play("oneOne");    // x
-play("oneTwo");    // o
-play("threeOne");  // x
-play("twoTwo");    // o
-play("threeThree");// x
-play("threeTwo");  // o -> win
