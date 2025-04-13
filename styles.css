@@ -60,3 +60,33 @@ h2 {
     color: #3498db; 
     font-weight: bold;
 }
+
+.player-setup {
+    margin-bottom: 20px;
+}
+
+.player-setup input {
+    padding: 8px;
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+#startBtn {
+    padding: 8px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#resetBtn {
+    padding: 8px 12px;
+    font-size: 1rem;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.result-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: green;
+}
+
