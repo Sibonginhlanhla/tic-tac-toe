@@ -11,6 +11,7 @@ cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
         playRound(index); // Use index to determine which cell
     });
+    cell.classList.add("empty");
 });
 
 function game(){
@@ -79,7 +80,8 @@ function game(){
             const currentPlayer = playerOne.turn ? playerOne : playerTwo;
             gameboard.board[round] = currentPlayer.id;
             cells[round].textContent = currentPlayer.id;
-
+            cells[round].classList.remove("empty");
+            cells[round].classList.add(currentPlayer.id === "x" ? "x-color" : "o-color");
             // Switch turns
             playerOne.turn = !playerOne.turn;
             playerTwo.turn = !playerTwo.turn;
@@ -97,7 +99,11 @@ function game(){
 
     function resetGame() {
         gameboard.board.fill("");
-        cells.forEach(cell => cell.textContent = "");
+        cells.forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove("x-color", "o-color");
+            cell.classList.add("empty");
+        });
         playerOne.turn = true;
         playerTwo.turn = false;
     }
