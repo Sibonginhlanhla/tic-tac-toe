@@ -55,8 +55,9 @@ function game(nameX, nameO) {
 
         return null;
     }
-
+    let gameOver = false;
     return function (round) {
+        if (gameOver || gameboard.board[round] !== "") return;
         if (gameboard.board[round] === "" && checkWinner(gameboard.board) === null) {
             const currentPlayer = playerOne.turn ? playerOne : playerTwo;
             gameboard.board[round] = currentPlayer.id;
@@ -70,6 +71,7 @@ function game(nameX, nameO) {
 
             const result = checkWinner(gameboard.board);
             if (result) {
+                gameOver = true;
                 setTimeout(() => {
                     resultDisplay.textContent =
                         result === "draw"
@@ -84,16 +86,13 @@ function game(nameX, nameO) {
 const resetBtn = document.getElementById("resetBtn");
 
 resetBtn.addEventListener("click", () => {
-    // Clear board UI and data
     cells.forEach(cell => {
         cell.textContent = "";
         cell.className = "empty";
-        const newCell = cell.cloneNode(true); // Remove previous event listeners
-        cell.replaceWith(newCell);
     });
     startBtn.innerText = "Start Game"
     resultDisplay.textContent = "";
-
     document.querySelector("#playerX").value = "";
     document.querySelector("#playerO").value = "";
 });
+
